@@ -11,7 +11,11 @@
     "prepare": "npm run build",
     "watch": "tsc --watch"
   },
-  "keywords": ["mcp", "weather", "open-meteo"],
+  "keywords": [
+    "mcp",
+    "weather",
+    "open-meteo"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {

@@ -8,6 +8,47 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
 
+// TypeScript interfaces for Open Meteo API responses
+interface ForecastData {
+  latitude: number;
+  longitude: number;
+  daily: {
+    time: string[];
+    temperature_2m_max: number[];
+    temperature_2m_min: number[];
+    precipitation_sum: number[];
+    wind_speed_10m_max: number[];
+    weather_code: number[];
+  };
+}
+
+interface CurrentWeatherData {
+  latitude: number;
+  longitude: number;
+  current: {
+    time: string;
+    temperature_2m: number;
+    relative_humidity_2m: number;
+    precipitation: number;
+    wind_speed_10m: number;
+    wind_direction_10m: number;
+    weather_code: number;
+  };
+}
+
+interface GeocodeResult {
+  name: string;
+  latitude: number;
+  longitude: number;
+  elevation?: number;
+  admin1?: string;
+  country?: string;
+}
+
+interface GeocodeResponse {
+  results?: GeocodeResult[];
+}
+
 // Schema for forecast arguments
 const GetForecastArgsSchema = z.object({
   latitude: z.number().min(-90).max(90).describe("Latitude coordinate"),
@@ -27,7 +68,7 @@ const GeocodeArgsSchema = z.object({
 });
 
 // Format forecast data into readable text
-function formatForecast(data: any): string {
+function formatForecast(data: ForecastData): string {
   const { latitude, longitude, daily } = data;
   let result = `Weather Forecast for coordinates (${latitude}, ${longitude})\n\n`;
   
@@ -43,7 +84,7 @@ function formatForecast(data: any): string {
 }
 
 // Format current weather data
-function formatCurrentWeather(data: any): string {
+function formatCurrentWeather(data: CurrentWeatherData): string {
   const { latitude, longitude, current } = data;
   let result = `Current Weather for coordinates (${latitude}, ${longitude})\n\n`;
   result += `Time: ${current.time}\n`;
@@ -71,7 +112,7 @@ async function getForecast(latitude: number, longitude: number, forecast_days: n
     throw new Error(`Open Meteo API error: ${response.statusText}`);
   }
 
-  const data = await response.json();
+  const data = await response.json() as ForecastData;
   return formatForecast(data);
 }
 
@@ -86,7 +127,7 @@ async function getCurrentWeather(latitude: number, longitude: number): Promise<s
     throw new Error(`Open Meteo API error: ${response.statusText}`);
   }
 
-  const data = await response.json();
+  const data = await response.json() as CurrentWeatherData;
   return formatCurrentWeather(data);
 }
 
@@ -102,7 +143,7 @@ async function geocodeLocation(location: string): Promise<string> {
     throw new Error(`Geocoding API error: ${response.statusText}`);
   }
 
-  const data = await response.json();
+  const data = await response.json() as GeocodeResponse;
   
   if (!data.results || data.results.length === 0) {
     return `No results found for location: ${location}`;
