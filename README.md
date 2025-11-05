@@ -1,6 +1,8 @@
-# Open Meteo MCP Server
+# Global Weather MCP Server
 
-A Model Context Protocol (MCP) server that provides weather data from [Open Meteo](https://open-meteo.com/), a free weather API service.
+The Global Weather MCP Server gives AI assistants real-time access to weather data worldwide through the Model Context Protocol. By providing weather information directly, it eliminates the need for web searches, keeping your conversations private while delivering accurate, up-to-date forecasts and conditions. 
+
+When AI assistants need weather data, they typically use web search, which means your location and queries are sent to search engines and tracked. I wanted a way to get accurate weather information in my AI applications without compromising user privacy. The Global Weather MCP Server solves this by providing direct access to weather APIs through MCP, keeping location data and queries private while still delivering real-time forecasts and conditions.
 
 ## Features
 
